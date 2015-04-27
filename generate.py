@@ -1,6 +1,12 @@
 from nltk.parse.generate import generate
 from nltk import CFG
 import random
+from rauth import OAuth1Service
+from config import tumblrrestclient1,tumblrrestclient2,tumblrrestclient3,tumblrrestclient4
+import pytumblr
+
+client = pytumblr.TumblrRestClient( tumblrrestclient1, tumblrrestclient2, tumblrrestclient3, tumblrrestclient4)
+
 
 grammar = """greeting -> g
   g -> w NP | NP
@@ -20,5 +26,8 @@ sentences = []
 for sentence in generate(g, depth=6):
   sentences.append(' '.join(sentence))
 
-for i in range(1):
-  print(random.choice(sentences))
+for i in range(len(sentences)):
+  s = random.choice(sentences).capitalize() + ","
+  ans = raw_input(s + " y or n?")
+  if ans == 'y':
+    client.create_quote("warmestbestregards", state="queue", quote=s, tags=["beep boop"])
